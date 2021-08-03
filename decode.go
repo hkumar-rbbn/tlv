@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"io"
 	"reflect"
 	"strconv"
 )
@@ -132,10 +133,10 @@ func parseTLV(b []byte) (fragments, error) {
 	var tag uint16
 	var length uint16
 	for {
-		if err := binary.Read(buffer, binary.BigEndian, &tag); err != nil {
+		if err := binary.Read(buffer, binary.BigEndian, &tag); err != nil && err != io.EOF {
 			fmt.Printf("Binary Read error: %v", err)
 		}
-		if err := binary.Read(buffer, binary.BigEndian, &length); err != nil {
+		if err := binary.Read(buffer, binary.BigEndian, &length); err != nil && err != io.EOF {
 			fmt.Printf("Binary Read error: %v", err)
 		}
 		value := make([]byte, length)
